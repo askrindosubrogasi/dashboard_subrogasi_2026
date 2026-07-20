@@ -4,6 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Cegah browser menyimpan versi lama HTML (agar update di GitHub Pages langsung terlihat tanpa perlu clear cache manual) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Dashboard Kinerja Subrogasi 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -971,7 +975,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 3px;
       min-width: 0
     }
 
@@ -979,11 +983,11 @@
       display: grid;
       grid-template-columns: 12px 1fr 104px 50px;
       gap: 10px;
-      font-size: 9.5px;
-      letter-spacing: .4px;
+      font-size: 9px;
+      letter-spacing: .3px;
       color: var(--faint);
       text-transform: uppercase;
-      padding-bottom: 6px;
+      padding-bottom: 4px;
       border-bottom: 1px solid var(--border)
     }
 
@@ -992,14 +996,38 @@
       grid-template-columns: 12px 1fr 104px 50px;
       align-items: center;
       gap: 10px;
-      font-size: 11px
+      font-size: 10.5px
     }
 
     .pie-leg-row .md {
       font-family: "Space Grotesk";
       font-weight: 700;
       text-align: right;
-      font-size: 12.5px
+      font-size: 11.5px
+    }
+
+    .pie-leg-total {
+      display: grid;
+      grid-template-columns: 12px 1fr 104px 50px;
+      align-items: center;
+      gap: 10px;
+      margin-top: 2px;
+      padding-top: 4px;
+      border-top: 1px solid var(--border);
+      font-family: "Space Grotesk";
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--ink)
+    }
+
+    .pie-leg-total .md {
+      text-align: right;
+      font-size: 12px
+    }
+
+    .pie-leg-total .sh {
+      text-align: right;
+      color: var(--dim)
     }
 
     .pie-leg-row .nm small {
@@ -3025,18 +3053,22 @@
     </div>`;
     }
     function compLegend(items) {
+      // porsi = realisasi MtD tiap item dibanding TOTAL MtD (komposisi bulan berjalan)
       const total = items.reduce((a, p) => a + p.real, 0) || 1;
       return items.map(p => {
         const share = rnd2(p.real / total * 100);
-        const mtd = (p.mtd === null || p.mtd === undefined) ? 0 : p.mtd;
         const col = p.cat === 'KUR' ? 'var(--kur)' : 'var(--nonkur)';
         return `<div class="pie-leg-row">
       <span class="sw" style="background:${p.color}"></span>
       <span class="nm">${p.name}<small style="color:${col}"> &middot; ${p.cat}</small></span>
-      <span class="md" style="color:${col}">${fmt(mtd)} M</span>
+      <span class="md" style="color:${col}">${fmt(p.real)} M</span>
       <span class="sh">${fmt(share)}%</span>
     </div>`;
       }).join('');
+    }
+    function compTotalRow(items) {
+      const total = items.reduce((a, p) => a + p.real, 0);
+      return `<div class="pie-leg-total"><span></span><span>Total MtD ${D.meta.latest_month}</span><span class="md">${fmt(total)} M</span><span class="sh">100%</span></div>`;
     }
     function slProduk() {
       const k = D.produk_kur;
@@ -3049,10 +3081,12 @@
       };
       const nkPctFY = nk.target_annual ? rnd2(nk.real / nk.target_annual * 100) : 0;
       const nkMax = Math.max(...D.produk_nonkur.map(p => p.real), 1);
+      // %porsi tiap produk NON KUR = realisasi produk / total realisasi NON KUR (sama seperti KUR per bank di kiri)
+      const nkTotalReal = D.produk_nonkur.reduce((a, p) => a + p.real, 0) || 1;
       const nkRows = D.produk_nonkur.map(p => `
       <div class="bank-row nk"><span class="bn">${p.name}</span>
       <span class="bb"><i style="width:${Math.min(p.real / nkMax * 100, 100)}%"></i></span>
-      <span class="bp">${fmt(p.real)} M &middot; <span style="color:${pctColor(p.pct)}">${fmt(p.pct)}%</span></span></div>`).join('');
+      <span class="bp">${fmt(p.real)} M &middot; ${fmt(rnd2(p.real / nkTotalReal * 100))}%</span></div>`).join('');
       let kurExtra;
       if (D.produk_kur_banks && D.produk_kur_banks.length) {
         const bmax = Math.max(...D.produk_kur_banks.map(b => b.real), 1);
@@ -3065,15 +3099,16 @@
       }
       // composition pies: KUR per bank (if available) and NON KUR per produk, shown as two
       // separate 100% breakdowns (per management's request) rather than one combined pie.
+      // komposisi kanan berbasis MtD (bulan berjalan): nilai & porsi tiap bank/produk pakai realisasi bulan terakhir
       const lastOf = arr => (arr && arr.length) ? arr[arr.length - 1] : 0;
       const kurCompItems = (D.produk_kur_banks && D.produk_kur_banks.length)
-        ? D.produk_kur_banks.map((b, i) => ({ name: b.name, real: b.real, mtd: lastOf(b.monthly), cat: 'KUR', color: KUR_PIE_COLORS[i % KUR_PIE_COLORS.length] }))
-        : [{ name: 'KUR', real: k.real, mtd: lastOf(D.produk_kur.monthly && D.produk_kur.monthly.real), cat: 'KUR', color: KUR_PIE_COLORS[0] }];
-      const nkCompItems = D.produk_nonkur.map((p, i) => ({ name: p.name, real: p.real, mtd: lastOf(p.monthly && p.monthly.real), cat: 'NON KUR', color: NONKUR_PIE_COLORS[i % NONKUR_PIE_COLORS.length] }));
+        ? D.produk_kur_banks.map((b, i) => ({ name: b.name, real: lastOf(b.monthly), cat: 'KUR', color: KUR_PIE_COLORS[i % KUR_PIE_COLORS.length] }))
+        : [{ name: 'KUR', real: lastOf(D.produk_kur.monthly && D.produk_kur.monthly.real), cat: 'KUR', color: KUR_PIE_COLORS[0] }];
+      const nkCompItems = D.produk_nonkur.map((p, i) => ({ name: p.name, real: lastOf(p.monthly && p.monthly.real), cat: 'NON KUR', color: NONKUR_PIE_COLORS[i % NONKUR_PIE_COLORS.length] }));
       return `<div class="slide" data-name="Per Produk">
     <div class="eyebrow"><span class="num">04</span><span class="lbl">Kinerja per Produk</span></div>
-    <h2>Rincian per Produk · Periode Berjalan</h2>
-    <div class="desc">Realisasi vs target per produk (seasonal) &amp; pencapaian terhadap target penuh tahun (FY) di panel kiri. Tabel kanan menampilkan komposisi realisasi KUR per bank &amp; NON KUR per produk, dengan realisasi bulan berjalan (MtD ${D.meta.latest_month}) per baris. Angka dalam Milyar.</div>
+    <h2>Rincian per Produk · Periode Berjalan (Seasonal)</h2>
+    <div class="desc">Panel kiri: realisasi vs target per produk (seasonal), pencapaian FY, dan porsi tiap bank/produk terhadap total realisasi seasonal. Tabel kanan: komposisi realisasi bulan berjalan (MtD ${D.meta.latest_month}) — porsi tiap baris = realisasi MtD dibandingkan total MtD masing-masing (KUR & NON KUR). Angka dalam Milyar.</div>
     <div class="prod-wrap">
       <div class="kur-panel">
         <div class="lbl">KUR</div>
@@ -3098,23 +3133,25 @@
       </div>
       <div class="pie-panel">
         <div class="pie-section">
-          <div class="pie-title">Komposisi Realisasi KUR per Bank · 100%</div>
+          <div class="pie-title">Komposisi Realisasi KUR per Bank · MtD ${D.meta.latest_month}</div>
           <div class="pie-body">
-            ${compPie(kurCompItems, 118, 'var(--kur)', 'Total KUR')}
+            ${compPie(kurCompItems, 108, 'var(--kur)', 'Total MtD')}
             <div class="pie-legend">
-              <div class="pie-legend-hd"><span></span><span>Bank</span><span style="text-align:right">Real. ${D.meta.latest_month} (MtD)</span><span style="text-align:right">%Total</span></div>
+              <div class="pie-legend-hd"><span></span><span>Bank</span><span style="text-align:right">Real. ${D.meta.latest_month} (MtD)</span><span style="text-align:right">%Total MtD</span></div>
               ${compLegend(kurCompItems)}
+              ${compTotalRow(kurCompItems)}
             </div>
           </div>
         </div>
         <div class="pie-divider"></div>
         <div class="pie-section">
-          <div class="pie-title">Komposisi Realisasi NON KUR per Produk · 100%</div>
+          <div class="pie-title">Komposisi Realisasi NON KUR per Produk · MtD ${D.meta.latest_month}</div>
           <div class="pie-body">
-            ${compPie(nkCompItems, 118, 'var(--nonkur)', 'Total NON KUR')}
+            ${compPie(nkCompItems, 108, 'var(--nonkur)', 'Total MtD')}
             <div class="pie-legend">
-              <div class="pie-legend-hd"><span></span><span>Produk</span><span style="text-align:right">Real. ${D.meta.latest_month} (MtD)</span><span style="text-align:right">%Total</span></div>
+              <div class="pie-legend-hd"><span></span><span>Produk</span><span style="text-align:right">Real. ${D.meta.latest_month} (MtD)</span><span style="text-align:right">%Total MtD</span></div>
               ${compLegend(nkCompItems)}
+              ${compTotalRow(nkCompItems)}
             </div>
           </div>
         </div>
@@ -4002,8 +4039,8 @@
         return;
       }
       const slides = [slCover(),
-      slTrenBulanan(),
       slPencapaian(),
+      slTrenBulanan(),
       slProduk(), slKurBank(), slNonKurProduk(), slKurBankYoY(), slProdukYoY(), slProdukMtd(), slRO(), slBO(), slBOAll(), slGeo(), slGeoDetail(), slKunjungan()];
       document.getElementById('slides').innerHTML = slides.join('');
       slideEls = [...document.querySelectorAll('.slide')];
