@@ -139,6 +139,152 @@
     }
 
     /* top bar */
+    /* ---- Layar login (mode terproteksi Apps Script) ---- */
+    #loginOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: radial-gradient(circle at 50% 22%, #16264a, var(--bg));
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 372px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 34px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 30px 80px -22px rgba(0, 0, 0, .6)
+    }
+
+    .login-logo {
+      height: 52px;
+      width: auto;
+      max-width: 220px;
+      object-fit: contain;
+      margin-bottom: 16px
+    }
+
+    .login-card h1 {
+      font-family: "Space Grotesk";
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      margin: 0;
+      color: var(--ink)
+    }
+
+    .login-sub {
+      font-size: 12.5px;
+      color: var(--dim);
+      margin: 6px 0 20px;
+      text-align: center
+    }
+
+    #loginForm {
+      width: 100%;
+      display: flex;
+      flex-direction: column
+    }
+
+    #loginForm label {
+      font-size: 11px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin: 10px 0 5px
+    }
+
+    #loginForm input {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 13px;
+      color: var(--ink);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s
+    }
+
+    #loginForm input:focus {
+      border-color: var(--gab)
+    }
+
+    #loginBtn {
+      margin-top: 22px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--gab), #e0872a);
+      color: #1a1204;
+      font-family: "Space Grotesk";
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: filter .15s, transform .1s
+    }
+
+    #loginBtn:hover {
+      filter: brightness(1.06)
+    }
+
+    #loginBtn:active {
+      transform: translateY(1px)
+    }
+
+    #loginBtn:disabled {
+      opacity: .55;
+      cursor: default
+    }
+
+    .login-err {
+      min-height: 15px;
+      color: var(--bad);
+      font-size: 12px;
+      margin-top: 12px;
+      text-align: center;
+      line-height: 1.4
+    }
+
+    .login-foot {
+      margin-top: 22px;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--faint)
+    }
+
+    /* tombol logout di header */
+    .logout-btn {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--dim);
+      border-radius: 8px;
+      padding: 6px 11px;
+      font-size: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color .15s, color .15s
+    }
+
+    .logout-btn:hover {
+      border-color: var(--bad);
+      color: var(--bad)
+    }
+
     .topbar {
       position: absolute;
       top: 0;
@@ -2494,6 +2640,22 @@
 </head>
 
 <body>
+  <div id="loginOverlay" style="display:none">
+    <div class="login-card">
+      <img class="login-logo" src="https://raw.githubusercontent.com/yanuarsyah/iyee/main/WhatsApp_Image_2026-07-16_at_14.09.20-removebg-preview.png" alt="Logo Askrindo" onerror="this.style.display='none'">
+      <h1>Dashboard Kinerja Subrogasi</h1>
+      <p class="login-sub">Masuk untuk mengakses dashboard</p>
+      <form id="loginForm" autocomplete="on">
+        <label for="loginUser">Username</label>
+        <input type="text" id="loginUser" autocomplete="username" spellcheck="false" required>
+        <label for="loginPass">Password</label>
+        <input type="password" id="loginPass" autocomplete="current-password" required>
+        <div id="loginErr" class="login-err"></div>
+        <button type="submit" id="loginBtn">Masuk</button>
+      </form>
+      <div class="login-foot">Subrogation Division · PT Askrindo</div>
+    </div>
+  </div>
   <div id="viewport">
     <div id="stage">
       <div id="progress"></div>
@@ -2507,6 +2669,11 @@
         </div>
         <div class="meta">
           <input type="file" id="fileInput" accept=".xlsx,.xlsm" style="display:none">
+          <span id="userTag" style="display:none;font-size:12px;color:var(--dim)"></span>
+          <button class="logout-btn" id="logoutBtn" title="Keluar dari dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Keluar
+          </button>
           <select class="period-select" id="periodSel" title="Pilih periode data"></select>
           <button class="theme-toggle" id="themeToggle" title="Ganti tampilan terang/gelap">
             <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></svg>
@@ -4218,6 +4385,53 @@
       spreadsheetId: '1FJs1V0uhfoVXeV33dDw1ZaqDd1e7ZWIVVmm4RmRP62U' // Struktur_Data_Dashboard_Subrogasi_2026_V4 (Google Sheets asli)
     };
     const gsReady = () => !/^GANTI/.test(GS_CONFIG.spreadsheetId);
+
+    /* ============================================================================
+       MODE TERPROTEKSI (login username/password via Google Apps Script).
+       Isi AUTH_CONFIG.appsScriptUrl dengan URL Web App (.../exec) hasil deploy
+       Apps Script (lihat berkas "AppsScript_Login_Dashboard.gs" & panduannya).
+       - Bila diisi: dashboard menampilkan layar login lebih dulu, data ditarik
+         lewat Apps Script dari spreadsheet PRIVAT (tidak lagi via gviz publik).
+       - Bila dibiarkan 'GANTI_...': dashboard tetap mode lama (publik, tanpa login).
+       ============================================================================ */
+    const AUTH_CONFIG = {
+      appsScriptUrl: 'https://script.google.com/macros/s/AKfycbyc01TuwRyKHInlwImhg-gQgIU01ayVfrFZM-mEfYuRMklmBeNDn4jxWG4u0SD1Y1eJsw/exec'
+    };
+    const authOn = () => /^https:\/\/script\.google\.com\/.+\/exec\b/.test(AUTH_CONFIG.appsScriptUrl || '');
+    let authUser = null, authTokMem = '';
+    function setToken(t) { authTokMem = t || ''; try { t ? sessionStorage.setItem('subro_tok', t) : sessionStorage.removeItem('subro_tok'); } catch (e) { } }
+    function getToken() { try { return sessionStorage.getItem('subro_tok') || authTokMem; } catch (e) { return authTokMem; } }
+    // Panggil Apps Script: POST body string (Content-Type text/plain -> "simple request", tanpa preflight CORS)
+    async function asCall(payload) {
+      const res = await fetch(AUTH_CONFIG.appsScriptUrl, {
+        method: 'POST', redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const txt = await res.text();
+      let j; try { j = JSON.parse(txt); } catch (e) { throw new Error('Respons server tidak valid. Pastikan URL Web App benar.'); }
+      return j;
+    }
+    async function doLogin(username, password) {
+      const j = await asCall({ action: 'login', username: username, password: password });
+      if (!j || !j.ok) throw new Error((j && j.error) || 'Login gagal');
+      setToken(j.token); authUser = { name: j.name, role: j.role, username: username };
+      return j;
+    }
+    function showLogin(msg) {
+      const ov = document.getElementById('loginOverlay'); if (ov) ov.style.display = 'flex';
+      const err = document.getElementById('loginErr'); if (err) err.textContent = msg || '';
+      const btn = document.getElementById('loginBtn'); if (btn) { btn.disabled = false; btn.textContent = 'Masuk'; }
+      const pw = document.getElementById('loginPass'); if (pw) pw.value = '';
+      const uEl = document.getElementById('loginUser'); if (uEl && !uEl.value) setTimeout(() => uEl.focus(), 50); else if (pw) setTimeout(() => pw.focus(), 50);
+    }
+    function hideLogin() { const ov = document.getElementById('loginOverlay'); if (ov) ov.style.display = 'none'; }
+    function doLogout() {
+      setToken(''); authUser = null;
+      if (gsTimer) { clearInterval(gsTimer); gsTimer = null; }
+      D = null; RAWROWS = null;
+      showLogin('');
+    }
     function gsStatus(msg) { const el = document.getElementById('gsStatus'); if (el) el.textContent = msg || ''; }
     /* parser CSV kecil dengan dukungan tanda kutip (nilai berkoma/berbaris) */
     function parseCsv(text) {
@@ -4345,15 +4559,26 @@
       const cleanDim = rows => rows.filter(r => typeof r.BO_Code === 'string' && r.BO_Code.trim() !== '');
       const cleanFact = rows => rows.filter(r => typeof r.Produk_Code === 'string' && r.Produk_Code.trim() !== '' && +r.Bulan >= 1 && +r.Bulan <= 12);
       const cleanVisit = rows => rows.filter(r => typeof r.BO_Code === 'string' && r.BO_Code.trim() !== '');
-      const [cabR, ftR, frR, frLYr, fkbR, fkbLYr, visitR] = await Promise.all([
-        gsSheetRows('Dim_Cabang', true),
-        gsSheetRows('Fact_Target', true),
-        gsSheetRows('Fact_Realisasi', true),
-        gsSheetRows('Fact_Realisasi_LY', false),
-        gsSheetRows('Fact_KUR_Bank', false),
-        gsSheetRows('Fact_KUR_Bank_LY', false),
-        gsSheetRows('Fact_Kinerja_Cabang', false)
-      ]);
+      let cabR, ftR, frR, frLYr, fkbR, fkbLYr, visitR;
+      if (authOn()) {
+        // MODE TERPROTEKSI: satu panggilan ke Apps Script mengembalikan semua sheet (butuh token valid)
+        const j = await asCall({ action: 'data', token: getToken() });
+        if (!j || !j.ok) { const err = new Error((j && j.error) || 'Sesi tidak valid'); err.auth = true; throw err; }
+        const dt = j.data || {};
+        cabR = dt.Dim_Cabang || []; ftR = dt.Fact_Target || []; frR = dt.Fact_Realisasi || [];
+        frLYr = dt.Fact_Realisasi_LY || null; fkbR = dt.Fact_KUR_Bank || null;
+        fkbLYr = dt.Fact_KUR_Bank_LY || null; visitR = dt.Fact_Kinerja_Cabang || null;
+      } else {
+        [cabR, ftR, frR, frLYr, fkbR, fkbLYr, visitR] = await Promise.all([
+          gsSheetRows('Dim_Cabang', true),
+          gsSheetRows('Fact_Target', true),
+          gsSheetRows('Fact_Realisasi', true),
+          gsSheetRows('Fact_Realisasi_LY', false),
+          gsSheetRows('Fact_KUR_Bank', false),
+          gsSheetRows('Fact_KUR_Bank_LY', false),
+          gsSheetRows('Fact_Kinerja_Cabang', false)
+        ]);
+      }
       const cab = cleanDim(cabR), ft = cleanFact(ftR), fr = cleanFact(frR);
       const frLY = frLYr ? cleanFact(frLYr) : null;
       const fkb = fkbR ? cleanFact(fkbR) : null;
@@ -4369,14 +4594,21 @@
     async function gsLoad() {
       const btn = document.getElementById('gsBtn');
       if (btn) { btn.disabled = true; }
-      gsStatus('Mengambil data dari Google Sheets…');
+      gsStatus(authOn() ? 'Memuat data…' : 'Mengambil data dari Google Sheets…');
       try {
         const { nd, periods, raw } = await gsFetchCompute();
-        RAWROWS = raw; PERIODS = periods; D = nd; buildAll(); go(0);
+        RAWROWS = raw; PERIODS = periods; D = nd;
+        if (authOn()) {
+          hideLogin();
+          const lo = document.getElementById('logoutBtn'); if (lo) lo.style.display = 'inline-flex';
+          const ut = document.getElementById('userTag'); if (ut && authUser) { ut.style.display = 'inline'; ut.textContent = authUser.name || authUser.username || ''; }
+        }
+        buildAll(); go(0);
         const extras = [nd.ytd.kur.yoy != null ? 'YoY aktif' : null, (nd.produk_kur_banks && nd.produk_kur_banks.length) ? 'per-bank aktif' : null].filter(Boolean).join(', ');
-        toast('Data ' + D.meta.latest_month + ' ' + D.meta.year + ' dimuat dari Google Sheets · ' + D.meta.n_bo + ' branch' + (extras ? ' · ' + extras : ''), 'ok');
+        toast('Data ' + D.meta.latest_month + ' ' + D.meta.year + ' dimuat · ' + D.meta.n_bo + ' branch' + (extras ? ' · ' + extras : ''), 'ok');
         gsStartAutoRefresh();
       } catch (e) {
+        if (authOn()) { showLogin(e && e.auth ? 'Sesi berakhir. Silakan login ulang.' : ('Gagal memuat data: ' + (e ? e.message : ''))); return; }
         gsStatus('Gagal: ' + e.message);
         if (btn) btn.disabled = false;
       }
@@ -4384,7 +4616,8 @@
     // auto-refresh SENYAP: tarik ulang data & bangun ulang TANPA memindah slide (pertahankan
     // posisi & zoom peta). Dilewati saat slideshow di-pause (ada yang sedang berinteraksi/hover).
     async function gsRefresh() {
-      if (!gsReady() || !D) return;
+      if (!D) return;
+      if (!authOn() && !gsReady()) return;
       if (!playing) return; // jangan ganggu bila sedang dilihat/diinteraksi (hover mem-pause)
       try {
         const prevMonth = D.meta.latest_month_num, prevReal = D.ytd.gab.real;
@@ -4394,15 +4627,46 @@
         if (nd.meta.latest_month_num !== prevMonth || nd.ytd.gab.real !== prevReal) {
           toast('Data diperbarui · s.d. ' + nd.meta.latest_month + ' ' + nd.meta.year, 'ok');
         }
-      } catch (e) { /* biarkan; tetap tampilkan data terakhir yang berhasil */ }
+      } catch (e) {
+        // sesi kadaluarsa saat auto-refresh -> minta login ulang
+        if (authOn() && e && e.auth) { doLogout(); }
+        /* selain itu: biarkan; tetap tampilkan data terakhir yang berhasil */
+      }
     }
     let gsTimer = null;
     function gsStartAutoRefresh() {
       if (gsTimer) return;
       gsTimer = setInterval(gsRefresh, 15 * 60 * 1000); // 15 menit
     }
+    // ---- wiring form login & tombol keluar ----
+    (function authWire() {
+      const form = document.getElementById('loginForm');
+      if (form) form.addEventListener('submit', async ev => {
+        ev.preventDefault();
+        const u = (document.getElementById('loginUser').value || '').trim();
+        const p = document.getElementById('loginPass').value || '';
+        const btn = document.getElementById('loginBtn'), err = document.getElementById('loginErr');
+        if (!u || !p) { if (err) err.textContent = 'Username & password wajib diisi.'; return; }
+        if (btn) { btn.disabled = true; btn.textContent = 'Memproses…'; }
+        if (err) err.textContent = '';
+        try {
+          await doLogin(u, p);         // validasi kredensial di server (throw bila salah)
+        } catch (e) {
+          if (btn) { btn.disabled = false; btn.textContent = 'Masuk'; }
+          if (err) err.textContent = e && e.message ? e.message : 'Login gagal.';
+          return;
+        }
+        if (btn) { btn.textContent = 'Masuk'; }
+        gsLoad();                      // tarik data pakai token; sembunyikan login bila sukses
+      });
+      const lo = document.getElementById('logoutBtn');
+      if (lo) lo.addEventListener('click', doLogout);
+    })();
     (function gsInit() {
       setTimeout(() => {
+        // MODE TERPROTEKSI: tampilkan layar login lebih dulu; data hanya dimuat setelah login sukses
+        if (authOn()) { showLogin(''); return; }
+        // MODE PUBLIK (lama): muat otomatis dari Google Sheets publik
         const btn = document.getElementById('gsBtn');
         if (!btn) return;
         if (gsReady()) { btn.style.display = 'flex'; gsLoad(); /* langsung coba muat otomatis */ }
