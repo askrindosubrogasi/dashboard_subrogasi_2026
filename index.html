@@ -4594,6 +4594,7 @@
     const authOn = () => /^https:\/\/script\.google\.com\/.+\/exec\b/.test(AUTH_CONFIG.appsScriptUrl || '');
     let authUser = null, authTokMem = '';
     let MON = null, monLastFetch = 0;   // data monitoring (aksi 'monitor'), untuk slide Monitoring
+    let PREFETCH_DATA = null;           // data sheet yang IKUT di respons login (hemat 1 panggilan)
     async function fetchMon() {
       if (!authOn() || !getToken()) { MON = null; return; }
       try { const j = await asCall({ action: 'monitor', token: getToken() }); MON = (j && j.ok) ? j : { ok: false, error: j && j.error }; }
@@ -4625,6 +4626,7 @@
       const j = await asCall({ action: 'login', username: username, password: password });
       if (!j || !j.ok) throw new Error((j && j.error) || 'Login gagal');
       setToken(j.token); authUser = { name: j.name, role: j.role, username: username };
+      if (j.data) PREFETCH_DATA = j.data; // data sheet ikut di respons login -> dashboard tampil tanpa panggilan kedua
       return j;
     }
     function showLogin(msg) {
@@ -4784,10 +4786,15 @@
       const cleanVisit = rows => rows.filter(r => typeof r.BO_Code === 'string' && r.BO_Code.trim() !== '');
       let cabR, ftR, frR, frLYr, fkbR, fkbLYr, visitR;
       if (authOn()) {
-        // MODE TERPROTEKSI: satu panggilan ke Apps Script mengembalikan semua sheet (butuh token valid)
-        const j = await asCall({ action: 'data', token: getToken() });
-        if (!j || !j.ok) { const err = new Error((j && j.error) || 'Sesi tidak valid'); err.auth = true; throw err; }
-        const dt = j.data || {};
+        // MODE TERPROTEKSI: pakai data yang sudah IKUT di respons login bila ada (tanpa panggilan ke-2);
+        // selain itu (mis. auto-refresh) baru panggil aksi 'data' dengan token.
+        let dt;
+        if (PREFETCH_DATA) { dt = PREFETCH_DATA; PREFETCH_DATA = null; }
+        else {
+          const j = await asCall({ action: 'data', token: getToken() });
+          if (!j || !j.ok) { const err = new Error((j && j.error) || 'Sesi tidak valid'); err.auth = true; throw err; }
+          dt = j.data || {};
+        }
         cabR = dt.Dim_Cabang || []; ftR = dt.Fact_Target || []; frR = dt.Fact_Realisasi || [];
         frLYr = dt.Fact_Realisasi_LY || null; fkbR = dt.Fact_KUR_Bank || null;
         fkbLYr = dt.Fact_KUR_Bank_LY || null; visitR = dt.Fact_Kinerja_Cabang || null;
@@ -4826,12 +4833,13 @@
           const lo = document.getElementById('logoutBtn'); if (lo) lo.style.display = 'inline-flex';
           const ut = document.getElementById('userTag'); if (ut && authUser) { ut.style.display = 'inline'; ut.textContent = authUser.name || authUser.username || ''; }
           startPing(); // mulai heartbeat status online
-          await fetchMon(); // ambil data monitoring (bila peran berhak) untuk slide terakhir
         }
-        buildAll(); go(0);
+        buildAll(); go(0); // TAMPILKAN dashboard sekarang (tanpa menunggu data monitoring)
         const extras = [nd.ytd.kur.yoy != null ? 'YoY aktif' : null, (nd.produk_kur_banks && nd.produk_kur_banks.length) ? 'per-bank aktif' : null].filter(Boolean).join(', ');
         toast('Data ' + D.meta.latest_month + ' ' + D.meta.year + ' dimuat · ' + D.meta.n_bo + ' branch' + (extras ? ' · ' + extras : ''), 'ok');
         gsStartAutoRefresh();
+        // data monitoring dimuat di LATAR; slide Monitoring ditambahkan begitu siap (tak menunda dashboard)
+        if (authOn()) fetchMon().then(() => { if (MON && MON.ok) buildAll(); }).catch(() => { });
       } catch (e) {
         if (authOn()) { showLogin(e && e.auth ? 'Sesi berakhir. Silakan login ulang.' : ('Gagal memuat data: ' + (e ? e.message : ''))); return; }
         gsStatus('Gagal: ' + e.message);
