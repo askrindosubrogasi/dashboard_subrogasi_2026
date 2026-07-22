@@ -285,6 +285,152 @@
       color: var(--bad)
     }
 
+    /* ---- Slide Monitoring akses ---- */
+    #monBody {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0
+    }
+
+    .mon-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 2px 0 12px
+    }
+
+    .mon-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 12px 16px
+    }
+
+    .mon-card .v {
+      font-family: "Space Grotesk";
+      font-weight: 800;
+      font-size: 26px;
+      line-height: 1;
+      color: var(--ink)
+    }
+
+    .mon-card .k {
+      font-size: 11px;
+      color: var(--dim);
+      margin-top: 5px;
+      text-transform: uppercase;
+      letter-spacing: .5px
+    }
+
+    .mon-cols,
+    .mon-row {
+      display: grid;
+      grid-template-columns: 118px 1fr 150px 128px 92px 128px 46px;
+      align-items: center;
+      gap: 10px
+    }
+
+    .mon-cols {
+      font-size: 10px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      color: var(--faint);
+      padding: 0 14px 8px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .mon-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      margin-top: 2px
+    }
+
+    .mon-row {
+      padding: 9px 14px;
+      border-bottom: 1px solid rgba(38, 50, 75, .5);
+      font-size: 12.5px
+    }
+
+    .mon-st {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 600;
+      white-space: nowrap
+    }
+
+    .mon-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      background: var(--faint)
+    }
+
+    .mon-st.on {
+      color: var(--good)
+    }
+
+    .mon-st.on .mon-dot {
+      background: var(--good);
+      box-shadow: 0 0 7px var(--good)
+    }
+
+    .mon-st.off {
+      color: var(--dim)
+    }
+
+    .mon-st.never {
+      color: var(--bad)
+    }
+
+    .mon-st.never .mon-dot {
+      background: var(--bad)
+    }
+
+    .mon-nm {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .mon-un,
+    .mon-uu {
+      color: var(--dim);
+      font-family: "Space Grotesk";
+      font-size: 12px
+    }
+
+    .mon-pr {
+      font-size: 11px
+    }
+
+    .mon-lt {
+      font-size: 12px
+    }
+
+    .mon-ct {
+      font-family: "Space Grotesk";
+      font-weight: 700;
+      text-align: right
+    }
+
+    .mon-muted {
+      color: var(--faint)
+    }
+
+    .mon-na {
+      font-size: 10px;
+      color: var(--warn);
+      border: 1px solid var(--warn);
+      border-radius: 10px;
+      padding: 1px 6px;
+      margin-left: 6px
+    }
+
     .topbar {
       position: absolute;
       top: 0;
@@ -3753,6 +3899,50 @@
       ${bos.length ? `<div class="gd-cols"><span>Branch Office</span><span>Realisasi / Target</span><span>Seasonal</span><span>Fullyear (FY) &middot; YoY</span></div>${rows}` : ''}
     </div>`;
     }
+    /* ---------- Slide MONITORING akses pengguna (peran Nasional/Regional) ----------
+       Data dari MON (aksi 'monitor' Apps Script) — sudah difilter sesuai peran di server. */
+    function monBodyHTML() {
+      if (!MON || !MON.ok) return '';
+      const s = MON.summary || { online: 0, used: 0, never: 0, total: 0 };
+      const list = (MON.list || []).slice().sort((a, b) => {
+        const rk = x => x.online ? 0 : (x.last ? 1 : 2);
+        return rk(a) - rk(b) || (b.last_ms - a.last_ms) || String(a.name).localeCompare(String(b.name));
+      });
+      const esc = x => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const rows = list.map(r => {
+        const cls = r.online ? 'on' : (r.last ? 'off' : 'never');
+        const label = r.online ? 'Online' : (r.last ? 'Offline' : 'Belum pernah');
+        const na = r.aktif === false ? ' <span class="mon-na">non-aktif</span>' : '';
+        return `<div class="mon-row">
+        <span class="mon-st ${cls}"><i class="mon-dot"></i>${label}</span>
+        <span class="mon-nm">${esc(r.name)}${na}</span>
+        <span class="mon-un">${esc(r.username)}</span>
+        <span class="mon-pr">${esc(r.peran || '-')}</span>
+        <span class="mon-uu">${esc(r.unit || '-')}</span>
+        <span class="mon-lt ${r.last ? '' : 'mon-muted'}">${r.last || '—'}</span>
+        <span class="mon-ct ${r.count ? '' : 'mon-muted'}">${r.count || 0}</span>
+      </div>`;
+      }).join('');
+      return `<div class="mon-cards">
+        <div class="mon-card"><div class="v" style="color:var(--good)">${s.online}</div><div class="k">Sedang Online</div></div>
+        <div class="mon-card"><div class="v">${s.used}</div><div class="k">Pernah Login</div></div>
+        <div class="mon-card"><div class="v" style="color:var(--bad)">${s.never}</div><div class="k">Belum Pernah</div></div>
+        <div class="mon-card"><div class="v" style="color:var(--gab)">${s.total}</div><div class="k">Total (lingkup Anda)</div></div>
+      </div>
+      <div class="mon-cols"><span>Status</span><span>Nama</span><span>Username</span><span>Peran</span><span>Kode Unit</span><span>Terakhir Login</span><span style="text-align:right">Jml</span></div>
+      <div class="mon-scroll">${rows || '<div class="note" style="margin-top:16px">Belum ada data.</div>'}</div>`;
+    }
+    function slMonitoring() {
+      const me = (MON && MON.me) || {};
+      const scope = me.scope === 'Nasional' ? 'Lingkup: semua Regional & Branch Office'
+        : ('Lingkup: unit ' + (me.unit || '') + ' & Branch Office binaannya');
+      return `<div class="slide" data-name="Monitoring">
+    <div class="eyebrow"><span class="num">15</span><span class="lbl">Monitoring Akses</span></div>
+    <h2>Monitoring Akses Pengguna Dashboard</h2>
+    <div class="desc">Status keaktifan pengguna (online / terakhir login / belum pernah) sesuai peran Anda — ${me.name || ''} · ${me.peran || ''}. ${scope}. Diperbarui: ${(MON && MON.server_time) || '—'}.</div>
+    <div id="monBody">${monBodyHTML()}</div>
+  </div>`;
+    }
     function slGeoDetail() {
       const sortedRo = [...D.ro].sort((a, b) => b.pct - a.pct);
       const groups = sortedRo.map(geoDetailGroup).join('');
@@ -4209,6 +4399,8 @@
       slPencapaian(),
       slTrenBulanan(),
       slProduk(), slKurBank(), slNonKurProduk(), slKurBankYoY(), slProdukYoY(), slProdukMtd(), slRO(), slBO(), slBOAll(), slGeo(), slGeoDetail(), slKunjungan()];
+      // slide MONITORING (paling akhir) — hanya untuk peran yang berhak (Nasional/Regional); data sudah difilter server
+      if (authOn() && MON && MON.ok) slides.push(slMonitoring());
       document.getElementById('slides').innerHTML = slides.join('');
       slideEls = [...document.querySelectorAll('.slide')];
       // nomor urut eyebrow otomatis mengikuti posisi slide (00, 01, 02, ...), agar tidak perlu
@@ -4309,6 +4501,8 @@
       dots.forEach((d, i) => d.classList.toggle('on', i === cur));
       statusTxt.textContent = `${cur + 1} / ${slideEls.length} · ${slideEls[cur].dataset.name}`;
       animateReveal(slideEls[cur]);
+      // saat mendarat di slide Monitoring: segarkan datanya (dibatasi maks 1x / 30 dtk)
+      if (slideEls[cur] && slideEls[cur].dataset.name === 'Monitoring' && authOn() && (Date.now() - monLastFetch > 30000)) refreshMon();
     }
     function go(i) { cur = (i + slideEls.length) % slideEls.length; elapsed = 0; prog.style.width = '0'; render(); }
     function next() { go(cur + 1) } function prev() { go(cur - 1) }
@@ -4395,10 +4589,25 @@
        - Bila dibiarkan 'GANTI_...': dashboard tetap mode lama (publik, tanpa login).
        ============================================================================ */
     const AUTH_CONFIG = {
-      appsScriptUrl: 'https://script.google.com/macros/s/AKfycbyc01TuwRyKHInlwImhg-gQgIU01ayVfrFZM-mEfYuRMklmBeNDn4jxWG4u0SD1Y1eJsw/exec'
+      appsScriptUrl: 'https://script.google.com/macros/s/AKfycbxrqHZVuH0xsH68ng5KOzXzQfLH_JLfGNEQ4bUjUC0WUWZZaAbRe_zOkv29YE1qG5YP5g/exec'
     };
     const authOn = () => /^https:\/\/script\.google\.com\/.+\/exec\b/.test(AUTH_CONFIG.appsScriptUrl || '');
     let authUser = null, authTokMem = '';
+    let MON = null, monLastFetch = 0;   // data monitoring (aksi 'monitor'), untuk slide Monitoring
+    async function fetchMon() {
+      if (!authOn() || !getToken()) { MON = null; return; }
+      try { const j = await asCall({ action: 'monitor', token: getToken() }); MON = (j && j.ok) ? j : { ok: false, error: j && j.error }; }
+      catch (e) { MON = { ok: false }; }
+      monLastFetch = Date.now();
+    }
+    // segarkan MON lalu perbarui isi slide Monitoring di tempat (tanpa buildAll ulang)
+    async function refreshMon() {
+      const prevOk = !!(MON && MON.ok);
+      await fetchMon();
+      const el = document.getElementById('monBody');
+      if (el && MON && MON.ok) el.innerHTML = monBodyHTML();
+      else if (prevOk !== !!(MON && MON.ok)) { buildAll(); } // status akses berubah -> susun ulang slide
+    }
     function setToken(t) { authTokMem = t || ''; try { t ? sessionStorage.setItem('subro_tok', t) : sessionStorage.removeItem('subro_tok'); } catch (e) { } }
     function getToken() { try { return sessionStorage.getItem('subro_tok') || authTokMem; } catch (e) { return authTokMem; } }
     // Panggil Apps Script: POST body string (Content-Type text/plain -> "simple request", tanpa preflight CORS)
@@ -4427,10 +4636,24 @@
     }
     function hideLogin() { const ov = document.getElementById('loginOverlay'); if (ov) ov.style.display = 'none'; }
     function doLogout() {
+      try { if (authOn() && getToken()) asCall({ action: 'logout', token: getToken() }).catch(() => { }); } catch (e) { }
       setToken(''); authUser = null;
       if (gsTimer) { clearInterval(gsTimer); gsTimer = null; }
-      D = null; RAWROWS = null;
+      if (pingTimer) { clearInterval(pingTimer); pingTimer = null; }
+      D = null; RAWROWS = null; MON = null;
       showLogin('');
+    }
+    // heartbeat "online": kirim ping tiap ±3 menit selama tab terlihat & sudah login
+    let pingTimer = null;
+    function startPing() {
+      if (!authOn() || pingTimer) return;
+      const beat = () => {
+        if (document.visibilityState && document.visibilityState !== 'visible') return;
+        const t = getToken(); if (!t) return;
+        asCall({ action: 'ping', token: t }).catch(() => { });
+      };
+      beat();
+      pingTimer = setInterval(beat, 3 * 60 * 1000);
     }
     function gsStatus(msg) { const el = document.getElementById('gsStatus'); if (el) el.textContent = msg || ''; }
     /* parser CSV kecil dengan dukungan tanda kutip (nilai berkoma/berbaris) */
@@ -4602,6 +4825,8 @@
           hideLogin();
           const lo = document.getElementById('logoutBtn'); if (lo) lo.style.display = 'inline-flex';
           const ut = document.getElementById('userTag'); if (ut && authUser) { ut.style.display = 'inline'; ut.textContent = authUser.name || authUser.username || ''; }
+          startPing(); // mulai heartbeat status online
+          await fetchMon(); // ambil data monitoring (bila peran berhak) untuk slide terakhir
         }
         buildAll(); go(0);
         const extras = [nd.ytd.kur.yoy != null ? 'YoY aktif' : null, (nd.produk_kur_banks && nd.produk_kur_banks.length) ? 'per-bank aktif' : null].filter(Boolean).join(', ');
@@ -4623,6 +4848,7 @@
         const prevMonth = D.meta.latest_month_num, prevReal = D.ytd.gab.real;
         const { nd, periods, raw } = await gsFetchCompute();
         RAWROWS = raw; PERIODS = periods; D = nd;
+        if (authOn()) await fetchMon();
         buildAll(); // 'cur' (slide aktif) dipertahankan; tidak go(0)
         if (nd.meta.latest_month_num !== prevMonth || nd.ytd.gab.real !== prevReal) {
           toast('Data diperbarui · s.d. ' + nd.meta.latest_month + ' ' + nd.meta.year, 'ok');
