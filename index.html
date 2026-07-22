@@ -3288,14 +3288,14 @@
       const best = sorted.slice(0, 10), worst = sorted.slice(-10).reverse();
       return `<div class="bo-tabpanel bo2-wrap" data-cat="${cat}" style="display:${active ? 'grid' : 'none'}">
       <div class="bo2-col best"><h4>10 Terbaik</h4><div class="bo2-rows">${best.map((b, i) => bo2Row(b, i, cat, i + 1)).join('')}</div></div>
-      <div class="bo2-col worst"><h4>10 Terburuk</h4><div class="bo2-rows">${worst.map((b, i) => bo2Row(b, i, cat, sorted.length - i)).join('')}</div></div>
+      <div class="bo2-col worst"><h4>10 Terendah</h4><div class="bo2-rows">${worst.map((b, i) => bo2Row(b, i, cat, sorted.length - i)).join('')}</div></div>
     </div>`;
     }
     function slBO() {
       return `<div class="slide" data-name="Branch Office">
     <div class="eyebrow"><span class="num">10</span><span class="lbl">Peringkat Branch Office</span></div>
     <h2>Pencapaian per Branch Office · ${D.meta.n_bo} BO</h2>
-    <div class="desc">10 branch office terbaik dan 10 terburuk terhadap target periode berjalan (peringkat berdasarkan pencapaian seasonal). Angka kecil "FY" = pencapaian terhadap target penuh tahun. Klik tab untuk berganti kategori.</div>
+    <div class="desc">10 branch office terbaik dan 10 terendah terhadap target periode berjalan (peringkat berdasarkan pencapaian seasonal). Angka kecil "FY" = pencapaian terhadap target penuh tahun. Klik tab untuk berganti kategori.</div>
     <div class="tabbar">
       <button class="tab-btn" onclick="showBoTab('kur',this)">KUR</button>
       <button class="tab-btn" onclick="showBoTab('nonkur',this)">NON KUR</button>
