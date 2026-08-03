@@ -3502,6 +3502,7 @@
     }
     function roPct(r, cat) {
       if (cat === 'gab') return r.pct;
+      if (r[cat + '_pct'] !== undefined) return r[cat + '_pct'];   // % dari sumber mentah (konsisten dgn Gabungan)
       const t = r[cat + '_t'], rr = r[cat + '_r'];
       return t ? rnd2(rr / t * 100) : 0;
     }
@@ -3537,6 +3538,7 @@
     }
     function boPct(b, cat) {
       if (cat === 'gab') return b.pct;
+      if (b[cat + '_pct'] !== undefined) return b[cat + '_pct'];   // % dari sumber mentah (konsisten dgn Gabungan)
       const t = b[cat + '_t'], rr = b[cat + '_r'];
       return t ? rnd2(rr / t * 100) : 0;
     }
@@ -4269,6 +4271,10 @@
           code: ro, name: (roName[ro] || ro).replace('Regional Office ', 'RO '), target: rnd(t / B), real: rnd(rr / B), pct: t ? rnd(rr / t * 100) : 0,
           kur_t: rnd(sumT(ytdM, ['KUR'], bos) / B), kur_r: rnd(sumR(ytdM, ['KUR'], bos) / B),
           nonkur_t: rnd(sumT(ytdM, ['NONKUR'], bos) / B), nonkur_r: rnd(sumR(ytdM, ['NONKUR'], bos) / B),
+          // % per kategori dihitung dari sumber MENTAH (bukan angka Milyar yang sudah dibulatkan)
+          // agar konsisten dengan % Gabungan — mis. unit tanpa KUR: % Gabungan = % NON KUR persis.
+          kur_pct: sumT(ytdM, ['KUR'], bos) ? rnd(sumR(ytdM, ['KUR'], bos) / sumT(ytdM, ['KUR'], bos) * 100) : 0,
+          nonkur_pct: sumT(ytdM, ['NONKUR'], bos) ? rnd(sumR(ytdM, ['NONKUR'], bos) / sumT(ytdM, ['NONKUR'], bos) * 100) : 0,
           target_annual: rnd((kurTAnnual + nonkurTAnnual) / B), kur_t_annual: rnd(kurTAnnual / B), nonkur_t_annual: rnd(nonkurTAnnual / B),
           // combined (gab) YoY plus its KUR-only/NON KUR-only breakdowns, since the RO ranking
           // slide lets the viewer switch tabs between KUR/NON KUR/Gabungan — each tab must show
@@ -4289,6 +4295,7 @@
           code: bo, name: boName[bo] || bo, ro: (roName[bo2ro[bo]] || '').replace('Regional Office ', 'RO '),
           target: rnd(t / B, 2), real: rnd(rr / B, 2), pct: t ? rnd(rr / t * 100) : 0,
           kur_t: rnd(kt / B, 2), kur_r: rnd(kr / B, 2), nonkur_t: rnd(nt / B, 2), nonkur_r: rnd(nr / B, 2), t_: t, r_: rr,
+          kur_pct: kt ? rnd(kr / kt * 100) : 0, nonkur_pct: nt ? rnd(nr / nt * 100) : 0,   // % dari sumber mentah (konsisten dgn Gabungan)
           target_annual: rnd((ktAnnual + ntAnnual) / B, 2), kur_t_annual: rnd(ktAnnual / B, 2), nonkur_t_annual: rnd(ntAnnual / B, 2),
           // same combined + per-category YoY split as RO, for the same reason (KUR/NON KUR/Gabungan tabs)
           yoy: yoyPct(rr, sumRLY(ytdM, null, [bo])), yoy_abs: yoyAbs(rr, sumRLY(ytdM, null, [bo])),
@@ -4878,7 +4885,7 @@
       const slides = [slCover(),
       slPencapaian(),
       slTrenBulanan(),
-      slProduk(), slKurBank(), slNonKurProduk(), slKurBankYoY(), slProdukYoY(), slProdukMtd(), slRO(), slBO(), slBOAll(), slGeo(), slGeoDetail(), slKunjungan()];
+      slKurBank(), slNonKurProduk(), slProduk(), slKurBankYoY(), slProdukYoY(), slProdukMtd(), slRO(), slBO(), slBOAll(), slGeo(), slGeoDetail(), slKunjungan()];
       // slide KINERJA UNIT (role-based): RO -> akumulasi + tiap BO; BO -> unitnya; Nasional -> tidak ada
       if (authOn() && authUser) {
         try { unitSlidesFor(authUser.role, authUser.unit).forEach(unit => slides.push(slKinerjaUnit(unit))); } catch (e) { }
