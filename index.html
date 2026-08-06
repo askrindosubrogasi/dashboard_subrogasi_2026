@@ -1367,6 +1367,128 @@
       color: var(--ink)
     }
 
+    /* enriched composition legend: Real (seasonal) + Target·%Capai (Seasonal & Full Year) */
+    .cmp2-cap {
+      font-size: 8.5px;
+      color: var(--faint);
+      letter-spacing: .2px;
+      margin: -2px 0 2px 0;
+      line-height: 1.3
+    }
+
+    .cmp2-hd {
+      display: grid;
+      grid-template-columns: 11px 1fr 44px 96px 96px;
+      gap: 7px;
+      font-size: 8.5px;
+      letter-spacing: .2px;
+      color: var(--faint);
+      text-transform: uppercase;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border);
+      align-items: end
+    }
+
+    .cmp2-hd .g {
+      text-align: center;
+      line-height: 1.2
+    }
+
+    .cmp2-hd small {
+      display: block;
+      font-size: 7.5px;
+      opacity: .8;
+      text-transform: none;
+      letter-spacing: 0
+    }
+
+    .cmp2-hd .rr {
+      text-align: right
+    }
+
+    .cmp2-row {
+      display: grid;
+      grid-template-columns: 11px 1fr 44px 96px 96px;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px
+    }
+
+    .cmp2-row .sw {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px
+    }
+
+    .cmp2-row .nm {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .cmp2-row .nm small {
+      font-weight: 400;
+      font-size: 9px
+    }
+
+    .cmp2-row .md {
+      font-family: "Space Grotesk";
+      font-weight: 700;
+      text-align: right;
+      font-size: 11px
+    }
+
+    .cmp2-row .rc,
+    .cmp2-total .rc {
+      font-family: "Space Grotesk";
+      text-align: right;
+      font-size: 10px;
+      white-space: nowrap
+    }
+
+    .cmp2-row .rc .tg,
+    .cmp2-total .rc .tg {
+      color: var(--dim);
+      font-style: normal;
+      font-size: 9.5px
+    }
+
+    .cmp2-row .rc b,
+    .cmp2-total .rc b {
+      font-weight: 700
+    }
+
+    .cmp2-row .rc .dash {
+      color: var(--faint)
+    }
+
+    .cmp2-total {
+      display: grid;
+      grid-template-columns: 11px 1fr 44px 96px 96px;
+      align-items: center;
+      gap: 7px;
+      margin-top: 3px;
+      padding-top: 4px;
+      border-top: 1px solid var(--border);
+      font-family: "Space Grotesk";
+      font-weight: 700;
+      font-size: 10px;
+      color: var(--ink)
+    }
+
+    .cmp2-total .md {
+      text-align: right;
+      font-size: 11px
+    }
+
+    .cmp2-note {
+      font-size: 8.5px;
+      color: var(--faint);
+      margin-top: 4px;
+      line-height: 1.35
+    }
+
     /* KUR per-bank performance slide */
     .bankperf-stats {
       display: flex;
@@ -2003,6 +2125,14 @@
       white-space: nowrap
     }
 
+    .ro3-row .n small {
+      display: block;
+      font-weight: 400;
+      font-size: 9px;
+      color: var(--faint);
+      font-family: "Space Grotesk"
+    }
+
     .ro3-row .pc {
       font-family: "Space Grotesk";
       font-weight: 700;
@@ -2555,12 +2685,114 @@
       padding-top: 5px;
       display: flex;
       justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
       font-size: 10.5px;
       color: var(--dim)
     }
 
     .uk-foot b {
       color: var(--ink)
+    }
+
+    .uk-foot .fl {
+      font-weight: 700;
+      white-space: nowrap
+    }
+
+    .uk-foot .fr {
+      text-align: right;
+      font-family: "Space Grotesk";
+      font-size: 9px;
+      line-height: 1.35
+    }
+
+    /* panel 3 · tabel Realisasi vs Target per bank/produk (unit) */
+    .uk-ccol {
+      display: flex;
+      flex-direction: column;
+      min-height: 0
+    }
+
+    .uk-ct-hd,
+    .uk-ct-row {
+      display: grid;
+      grid-template-columns: minmax(46px, 1fr) 40px 82px 82px;
+      gap: 6px;
+      align-items: center
+    }
+
+    .uk-ct-hd {
+      font-size: 8px;
+      color: var(--faint);
+      text-transform: uppercase;
+      letter-spacing: .2px;
+      padding-bottom: 3px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid var(--border);
+      align-items: end
+    }
+
+    .uk-ct-hd .rl,
+    .uk-ct-hd .hs {
+      text-align: right;
+      line-height: 1.15
+    }
+
+    .uk-ct-hd small {
+      display: block;
+      font-size: 7px;
+      opacity: .8;
+      text-transform: none;
+      letter-spacing: 0
+    }
+
+    .uk-ct-row {
+      margin-bottom: 4px;
+      font-size: 10px
+    }
+
+    .uk-ct-row .nm {
+      font-weight: 700;
+      font-size: 10.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .uk-ct-row .rl {
+      text-align: right;
+      font-family: "Space Grotesk";
+      font-weight: 700;
+      font-size: 10.5px
+    }
+
+    .uk-ct-row .sc {
+      text-align: right;
+      font-family: "Space Grotesk";
+      font-size: 9.5px;
+      white-space: nowrap
+    }
+
+    .uk-ct-row .sc .tg {
+      color: var(--dim);
+      font-style: normal;
+      font-size: 9px
+    }
+
+    .uk-ct-row .sc b {
+      font-weight: 700
+    }
+
+    .uk-ct-row .sc .dash,
+    .uk-ct-note {
+      color: var(--faint)
+    }
+
+    .uk-ct-note {
+      font-size: 8px;
+      line-height: 1.3;
+      margin: 2px 0 4px
     }
 
     /* ---- Tren Bulanan (slide 2) ---- */
@@ -3520,15 +3752,19 @@
     function rnd2(x) { return Math.round(x * 10) / 10; }
     function ro3Col(cat, label, cls) {
       const sorted = [...D.ro].sort((a, b) => roPct(b, cat) - roPct(a, cat));
-      const rows = sorted.map((r, i) => `
-      <div class="ro3-row anim-row ${i === 0 ? 'top1' : ''}"><span class="p">#${i + 1}</span><span class="n" title="${r.name}">${r.name}</span><span class="pc" style="color:${pctColor(roPct(r, cat))}">${fmt(roPct(r, cat))}%<small>FY ${fmt(roPctFY(r, cat))}% ${yoyBadge(roYoy(r, cat), roYoyAbs(r, cat))}</small></span></div>`).join('');
+      const rows = sorted.map((r, i) => {
+        const tgt = cat === 'gab' ? r.target : r[cat + '_t'];
+        const real = cat === 'gab' ? r.real : r[cat + '_r'];
+        return `
+      <div class="ro3-row anim-row ${i === 0 ? 'top1' : ''}"><span class="p">#${i + 1}</span><span class="n" title="${r.name}">${r.name}<small>Real ${fmt(real)} / Target ${fmt(tgt)} M</small></span><span class="pc" style="color:${pctColor(roPct(r, cat))}">${fmt(roPct(r, cat))}%<small>FY ${fmt(roPctFY(r, cat))}% ${yoyBadge(roYoy(r, cat), roYoyAbs(r, cat))}</small></span></div>`;
+      }).join('');
       return `<div class="ro3-col"><h4 class="${cls}">${label}</h4>${rows}</div>`;
     }
     function slRO() {
       return `<div class="slide" data-name="Regional Office">
     <div class="eyebrow"><span class="num">09</span><span class="lbl">Kinerja & Peringkat Regional</span></div>
     <h2>Pencapaian per Regional Office · ${D.meta.n_ro} RO</h2>
-    <div class="desc">Peringkat tiap Regional Office (termasuk Main Branch Office/KC Utama) menurut tiga kategori pencapaian terhadap target periode berjalan. Angka kecil "FY" = pencapaian terhadap target penuh tahun ${D.meta.year}.</div>
+    <div class="desc">Peringkat tiap Regional Office (termasuk Main Branch Office/KC Utama) menurut tiga kategori pencapaian terhadap target periode berjalan. Di bawah nama: <b>realisasi & target</b> periode berjalan (Milyar); persentase besar = pencapaian seasonal; angka kecil "FY" = pencapaian terhadap target penuh tahun ${D.meta.year}.</div>
     <div class="ro3-wrap">
       ${ro3Col('kur', 'Peringkat KUR', 'tag-kur')}
       ${ro3Col('nonkur', 'Peringkat NON KUR', 'tag-nonkur')}
@@ -3652,6 +3888,31 @@
       const total = items.reduce((a, p) => a + p.real, 0);
       return `<div class="pie-leg-total"><span></span><span>Total MtD ${D.meta.latest_month}</span><span class="md">${fmt(total)} M</span><span class="sh">100%</span></div>`;
     }
+    // ---- legenda komposisi diperkaya: Realisasi (seasonal) + Target·%Capai untuk Seasonal & Full Year ----
+    function richScopeCell(tgt, pct, hasTgt) {
+      if (!hasTgt) return '<span class="rc"><span class="dash">–</span></span>';
+      return `<span class="rc"><i class="tg">${fmt(tgt)} M</i> · <b style="color:${pctColor(pct)}">${fmt(pct)}%</b></span>`;
+    }
+    function richLegend(items, hasTgt) {
+      return items.map(p => {
+        const col = p.cat === 'KUR' ? 'var(--kur)' : 'var(--nonkur)';
+        return `<div class="cmp2-row">
+      <span class="sw" style="background:${p.color}"></span>
+      <span class="nm">${p.name}<small style="color:${col}"> &middot; ${p.cat}</small></span>
+      <span class="md">${fmt(p.real)} M</span>
+      ${richScopeCell(p.tgtSeas, p.pctSeas, hasTgt)}
+      ${richScopeCell(p.tgtFY, p.pctFY, hasTgt)}
+    </div>`;
+      }).join('');
+    }
+    // baris Total: Real = MtD (ditampilkan), %Capai (Seasonal & FY) diberikan eksplisit dari agregat
+    // resmi berbasis realisasi KUMULATIF, agar konsisten dgn baris per-item & cocok dgn panel kiri.
+    function richTotal(hasTgt, label, realDisplay, tS, pS, tF, pF) {
+      return `<div class="cmp2-total"><span></span><span>${label || 'Total'}</span><span class="md">${fmt(realDisplay)} M</span>${richScopeCell(tS, pS, hasTgt)}${richScopeCell(tF, pF, hasTgt)}</div>`;
+    }
+    function richHead(colLabel, mo) {
+      return `<div class="cmp2-hd"><span></span><span>${colLabel}</span><span class="rr">Real<small>${mo} · MtD</small></span><span class="g">Seasonal<small>Target &middot; %Capai</small></span><span class="g">Full Year<small>Target &middot; %Capai</small></span></div>`;
+    }
     function slProduk() {
       const k = D.produk_kur;
       const kPctFY = k.target_annual ? rnd2(k.real / k.target_annual * 100) : (k.pct_annual || 0);
@@ -3679,18 +3940,28 @@
       } else {
         kurExtra = `<div class="note">Rincian per bank (BRI, BNI, BTN, Mandiri, BPD, Swasta) tampil otomatis begitu sheet Fact_KUR_Bank (atau baris KUR_&lt;bank&gt;) terisi di data. Saat ini masih agregat KUR.</div>`;
       }
-      // composition pies: KUR per bank (if available) and NON KUR per produk, shown as two
-      // separate 100% breakdowns (per management's request) rather than one combined pie.
-      // komposisi kanan berbasis MtD (bulan berjalan): nilai & porsi tiap bank/produk pakai realisasi bulan terakhir
+      // Panel kanan (per permintaan): realisasi vs target per bank/produk, dua sudut waktu —
+      // Seasonal (kumulatif Jan..bulan berjalan) & Full Year (RKAP tahunan) — beserta %pencapaian.
+      // Donat = komposisi realisasi SEASONAL; tabel = Real + Target·%Capai (Seasonal & FY).
       const lastOf = arr => (arr && arr.length) ? arr[arr.length - 1] : 0;
-      const kurCompItems = (D.produk_kur_banks && D.produk_kur_banks.length)
-        ? D.produk_kur_banks.map((b, i) => ({ name: b.name, real: lastOf(b.monthly), cat: 'KUR', color: KUR_PIE_COLORS[i % KUR_PIE_COLORS.length] }))
-        : [{ name: 'KUR', real: lastOf(D.produk_kur.monthly && D.produk_kur.monthly.real), cat: 'KUR', color: KUR_PIE_COLORS[0] }];
-      const nkCompItems = D.produk_nonkur.map((p, i) => ({ name: p.name, real: lastOf(p.monthly && p.monthly.real), cat: 'NON KUR', color: NONKUR_PIE_COLORS[i % NONKUR_PIE_COLORS.length] }));
+      const kurBanks = D.produk_kur_banks || [];
+      const kurHasTgt = kurBanks.length ? !!D.has_bank_target : ((D.produk_kur.target_annual || 0) > 0);
+      // Kolom Real = realisasi bulan berjalan (MtD, bulan terakhir saja) -> donat = komposisi bulan itu.
+      // %Capai tetap memakai realisasi KUMULATIF (seasonal) vs target, agar pencapaian bermakna.
+      const kurCompItems = kurBanks.length
+        ? kurBanks.map((b, i) => ({ name: b.name, real: lastOf(b.monthly), cat: 'KUR', color: KUR_PIE_COLORS[i % KUR_PIE_COLORS.length], tgtSeas: b.target || 0, pctSeas: b.pct_seasonal || 0, tgtFY: b.target_annual || 0, pctFY: b.pct_annual || 0 }))
+        : [{ name: 'KUR', real: lastOf(D.produk_kur.monthly && D.produk_kur.monthly.real), cat: 'KUR', color: KUR_PIE_COLORS[0], tgtSeas: D.produk_kur.target || 0, pctSeas: D.produk_kur.pct || 0, tgtFY: D.produk_kur.target_annual || 0, pctFY: kPctFY }];
+      const nkCompItems = D.produk_nonkur.map((p, i) => ({ name: p.name, real: lastOf(p.monthly && p.monthly.real), cat: 'NON KUR', color: NONKUR_PIE_COLORS[i % NONKUR_PIE_COLORS.length], tgtSeas: p.target || 0, pctSeas: p.pct || 0, tgtFY: p.target_annual || 0, pctFY: p.pct_annual || 0 }));
+      // baris Total: Real ditampilkan MtD (jumlah bulan berjalan); %Capai dari realisasi kumulatif (seasonal) vs target resmi
+      const kurCumRealTot = kurBanks.length ? rnd2(kurBanks.reduce((a, b) => a + b.real, 0)) : D.produk_kur.real;
+      const kurPctSeasTot = D.produk_kur.target ? rnd2(kurCumRealTot / D.produk_kur.target * 100) : 0;
+      const kurPctFyTot = D.produk_kur.target_annual ? rnd2(kurCumRealTot / D.produk_kur.target_annual * 100) : 0;
+      const kurMtdTot = rnd2(kurCompItems.reduce((a, p) => a + p.real, 0));
+      const nkMtdTot = rnd2(nkCompItems.reduce((a, p) => a + p.real, 0));
       return `<div class="slide" data-name="Per Produk">
     <div class="eyebrow"><span class="num">04</span><span class="lbl">Kinerja per Produk</span></div>
     <h2>Rincian per Produk · Periode Berjalan (Seasonal)</h2>
-    <div class="desc">Panel kiri: realisasi vs target per produk (seasonal), pencapaian FY, dan porsi tiap bank/produk terhadap total realisasi seasonal. Tabel kanan: komposisi realisasi bulan berjalan (MtD ${D.meta.latest_month}) — porsi tiap baris = realisasi MtD dibandingkan total MtD masing-masing (KUR & NON KUR). Angka dalam Milyar.</div>
+    <div class="desc">Panel kiri: realisasi vs target per produk (seasonal), pencapaian FY, dan porsi tiap bank/produk terhadap total realisasi seasonal. Tabel kanan: <b>Real</b> = realisasi bulan berjalan (MtD ${D.meta.latest_month}) dengan donat sebagai komposisinya, di samping <b>target per Bank (KUR)</b> & <b>per Produk (NON KUR)</b> untuk dua sudut waktu — <b>Seasonal</b> (kumulatif Jan–${D.meta.latest_month}) dan <b>Full Year</b> (RKAP tahunan) — lengkap dengan <b>%pencapaian</b>. Angka dalam Milyar.</div>
     <div class="prod-wrap">
       <div class="kur-panel">
         <div class="lbl">KUR</div>
@@ -3715,25 +3986,28 @@
       </div>
       <div class="pie-panel">
         <div class="pie-section">
-          <div class="pie-title">Komposisi Realisasi KUR per Bank · MtD ${D.meta.latest_month}</div>
+          <div class="pie-title">KUR per Bank · Realisasi vs Target (Seasonal &amp; Full Year)</div>
+          <div class="cmp2-cap">Real = realisasi bulan ${D.meta.latest_month} (MtD); donat = komposisi bulan ${D.meta.latest_month}. %Capai = realisasi kumulatif Jan–${D.meta.latest_month} ÷ target (Seasonal = periode berjalan, FY = RKAP tahunan).</div>
           <div class="pie-body">
-            ${compPie(kurCompItems, 108, 'var(--kur)', 'Total MtD')}
+            ${compPie(kurCompItems, 88, 'var(--kur)', 'Real MtD ' + D.meta.latest_month)}
             <div class="pie-legend">
-              <div class="pie-legend-hd"><span></span><span>Bank</span><span style="text-align:right">Real. ${D.meta.latest_month} (MtD)</span><span style="text-align:right">%Total MtD</span></div>
-              ${compLegend(kurCompItems)}
-              ${compTotalRow(kurCompItems)}
+              ${richHead('Bank', D.meta.latest_month)}
+              ${richLegend(kurCompItems, kurHasTgt)}
+              ${richTotal(kurHasTgt, 'Total', kurMtdTot, D.produk_kur.target, kurPctSeasTot, D.produk_kur.target_annual, kurPctFyTot)}
+              ${kurHasTgt ? '' : '<div class="cmp2-note">Target per bank (Seasonal &amp; FY) tampil otomatis begitu sheet Fact_Target dipecah per bank (KUR_BRI, KUR_BNI, …). Saat ini target masih agregat KUR.</div>'}
             </div>
           </div>
         </div>
         <div class="pie-divider"></div>
         <div class="pie-section">
-          <div class="pie-title">Komposisi Realisasi NON KUR per Produk · MtD ${D.meta.latest_month}</div>
+          <div class="pie-title">NON KUR per Produk · Realisasi vs Target (Seasonal &amp; Full Year)</div>
+          <div class="cmp2-cap">Real = realisasi bulan ${D.meta.latest_month} (MtD); donat = komposisi bulan ${D.meta.latest_month}. %Capai = realisasi kumulatif Jan–${D.meta.latest_month} ÷ target (Seasonal = periode berjalan, FY = RKAP tahunan).</div>
           <div class="pie-body">
-            ${compPie(nkCompItems, 108, 'var(--nonkur)', 'Total MtD')}
+            ${compPie(nkCompItems, 88, 'var(--nonkur)', 'Real MtD ' + D.meta.latest_month)}
             <div class="pie-legend">
-              <div class="pie-legend-hd"><span></span><span>Produk</span><span style="text-align:right">Real. ${D.meta.latest_month} (MtD)</span><span style="text-align:right">%Total MtD</span></div>
-              ${compLegend(nkCompItems)}
-              ${compTotalRow(nkCompItems)}
+              ${richHead('Produk', D.meta.latest_month)}
+              ${richLegend(nkCompItems, true)}
+              ${richTotal(true, 'Total', nkMtdTot, nk.target, nk.pct, nk.target_annual, nkPctFY)}
             </div>
           </div>
         </div>
@@ -4352,15 +4626,25 @@
       const bankLyEntries = (bankLyRows && bankLyRows.length)
         ? bankLyRows.map(r => ({ pc: r.Produk_Code, m: +r.Bulan, v: +r.Realisasi_Rupiah || 0 })) : [];
       const bankLyTot = bc => bankLyEntries.reduce((a, r) => a + ((r.pc === bc && ytdM.includes(r.m)) ? r.v : 0), 0);
+      // TARGET per bank (KUR) dari sheet Fact_Target (baris Produk_Code = KUR_BRI/KUR_BNI/… ).
+      // Seasonal = jumlah Jan..bulan berjalan; FY = jumlah 12 bulan. Ada hanya bila sheet sudah
+      // dipecah per bank; bila masih agregat 'KUR' saja, semua nol -> has_bank_target = false.
+      const bankTgtRaw = (bc, mo) => T.reduce((a, r) => a + ((r.pc === bc && mo.includes(r.m)) ? r.v : 0), 0);
+      nd.has_bank_target = T.some(r => ('' + r.pc).startsWith('KUR_'));
       nd.produk_kur_banks = Object.keys(bankRaw).map(bc => {
         // tren bulanan per bank (Jan..bulan terakhir), mentah dari sheet
         const monthly = ytdM.map(m => rnd(bankEntries.reduce((a, r) => a + ((r.pc === bc && r.m === m) ? r.v : 0), 0) / B, 2));
         const ly_monthly = ytdM.map(m => rnd(bankLyEntries.reduce((a, r) => a + ((r.pc === bc && r.m === m) ? r.v : 0), 0) / B, 2));
         const lyTot = bankLyTot(bc);
+        const tSeasRaw = bankTgtRaw(bc, ytdM), tFyRaw = bankTgtRaw(bc, allM);
         return {
           name: BANKNAME[bc] || bc.replace('KUR_', ''),
           real: rnd(bankRaw[bc] / B, 2),
           pct: bankTotalRaw ? rnd(bankRaw[bc] / bankTotalRaw * 100) : 0,
+          // target & pencapaian per bank (realisasi Fact_KUR_Bank vs target Fact_Target per bank)
+          target: rnd(tSeasRaw / B, 2), target_annual: rnd(tFyRaw / B, 2),
+          pct_seasonal: tSeasRaw ? rnd(bankRaw[bc] / tSeasRaw * 100) : 0,
+          pct_annual: tFyRaw ? rnd(bankRaw[bc] / tFyRaw * 100) : 0,
           monthly,
           ly_real: rnd(lyTot / B, 2), ly_monthly,
           yoy: yoyPct(bankRaw[bc], lyTot), yoy_abs: yoyAbs(bankRaw[bc], lyTot)
@@ -4446,9 +4730,17 @@
           if (!ytdM.includes(r.m)) return;
           (bank[r.pc] = bank[r.pc] || Array(latest).fill(0))[r.m - 1] += r.v;
         });
+        // target per bank/produk difilter ke BO unit ini (seasonal = Jan..bulan berjalan; FY = 12 bulan)
+        const uTgt = (pc, mo) => T.reduce((a, r) => a + ((r.pc === pc && mo.includes(r.m) && inSet(r.bo)) ? r.v : 0), 0);
         let kur_banks = Object.keys(bank).map(function (bc) {
           const monthly = bank[bc].map(v => rnd(v / B, 2));
-          return { name: BANKNAME[bc] || bc.replace('KUR_', ''), real: rnd(bank[bc].reduce((a, b) => a + b, 0) / B, 2), monthly: monthly };
+          const realRaw = bank[bc].reduce((a, b) => a + b, 0);
+          const tS = uTgt(bc, ytdM), tF = uTgt(bc, allM);
+          return {
+            name: BANKNAME[bc] || bc.replace('KUR_', ''), real: rnd(realRaw / B, 2), monthly: monthly,
+            target: rnd(tS / B, 2), target_annual: rnd(tF / B, 2),
+            pct_seasonal: tS ? rnd(realRaw / tS * 100, 1) : 0, pct_annual: tF ? rnd(realRaw / tF * 100, 1) : 0
+          };
         }).sort((a, b) => b.real - a.real);
         const kurTot = kur_banks.reduce((a, b) => a + b.real, 0) || 1;
         kur_banks.forEach(b => { b.pct = rnd(b.real / kurTot * 100, 1); });
@@ -4456,7 +4748,13 @@
         let nonkur_produk = NONKUR.map(function (p) {
           const monthly = ytdM.map(m => rnd(R.reduce((a, r) => a + ((r.pc === p && r.m === m && inSet(r.bo)) ? r.v : 0), 0) / B, 2));
           const real = rnd(monthly.reduce((a, b) => a + b, 0), 2);
-          return { name: PNAME[p] || p, real: real, monthly: monthly };
+          const realRaw = R.reduce((a, r) => a + ((r.pc === p && ytdM.includes(r.m) && inSet(r.bo)) ? r.v : 0), 0);
+          const tS = uTgt(p, ytdM), tF = uTgt(p, allM);
+          return {
+            name: PNAME[p] || p, real: real, monthly: monthly,
+            target: rnd(tS / B, 2), target_annual: rnd(tF / B, 2),
+            pct_seasonal: tS ? rnd(realRaw / tS * 100, 1) : 0, pct_annual: tF ? rnd(realRaw / tF * 100, 1) : 0
+          };
         }).filter(p => p.real > 0).sort((a, b) => b.real - a.real);
         const nkTot = nonkur_produk.reduce((a, b) => a + b.real, 0) || 1;
         nonkur_produk.forEach(p => { p.pct = rnd(p.real / nkTot * 100, 1); });
@@ -4775,14 +5073,31 @@
         return `<span class="uk-lg"><svg width="16" height="6"><line x1="0" y1="3" x2="16" y2="3" stroke="${c}" stroke-width="2.4"/></svg><span style="color:${c}">${escU(s.name)}</span></span>`;
       }).join('');
     }
-    function ukComp(items, colors) {
-      const max = Math.max(...items.map(i => i.real), 1);
+    // sel target·%capai untuk satu sudut waktu (Seasonal / FY); show=false -> "–" (target per bank belum ada)
+    function ukScope(tgt, pct, show) {
+      if (!show) return '<span class="sc"><span class="dash">–</span></span>';
+      if (!tgt) return '<span class="sc"><i class="tg">0M</i> · <span class="dash">–</span></span>';
+      return `<span class="sc"><i class="tg">${fmt(tgt)}M</i> · <b style="color:${pctColor(pct)}">${fmt(pct)}%</b></span>`;
+    }
+    function ukCompHd() {
+      return `<div class="uk-ct-hd"><span></span><span class="rl">Real<small>seas</small></span><span class="hs">Seasonal<small>Tgt·%Capai</small></span><span class="hs">Full Year<small>Tgt·%Capai</small></span></div>`;
+    }
+    function ukComp(items, colors, show) {
       return items.map(function (it, i) {
         const c = colors[i % colors.length];
-        return `<div class="uk-crow"><span class="nm" style="color:${c}">${escU(it.name)}</span>
-          <span class="uk-bar"><i style="width:${Math.max(3, it.real / max * 100)}%;background:${c}"></i></span>
-          <span class="vv">${fmt(it.real)}M <small>· ${fmt(it.pct)}%</small></span></div>`;
+        return `<div class="uk-ct-row"><span class="nm" style="color:${c}">${escU(it.name)}</span><span class="rl">${fmt(it.real)}M</span>${ukScope(it.target, it.pct_seasonal, show)}${ukScope(it.target_annual, it.pct_annual, show)}</div>`;
       }).join('');
+    }
+    // footer: total realisasi (seasonal) + pencapaian terhadap total target seasonal & FY (konsisten dgn baris)
+    function ukFoot(label, items, show) {
+      const real = items.reduce((a, b) => a + b.real, 0);
+      const tS = items.reduce((a, b) => a + (b.target || 0), 0);
+      const tF = items.reduce((a, b) => a + (b.target_annual || 0), 0);
+      const pS = tS ? rnd2(real / tS * 100) : 0, pF = tF ? rnd2(real / tF * 100) : 0;
+      const tail = show
+        ? `Real <b>${fmt(real)}M</b> · Seas ${fmt(tS)}M·<b style="color:${pctColor(pS)}">${fmt(pS)}%</b> · FY ${fmt(tF)}M·<b style="color:${pctColor(pF)}">${fmt(pF)}%</b>`
+        : `Real <b>${fmt(real)}M</b>`;
+      return `<div class="uk-foot"><span class="fl">Total ${label}</span><span class="fr">${tail}</span></div>`;
     }
     function ukTotal(items) { return fmt(items.reduce((a, b) => a + b.real, 0)) + ' M'; }
     function ukEmpty() { return '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--faint);font-size:12px">Belum ada data.</div>'; }
@@ -4842,10 +5157,10 @@
             <div class="uk-legend">${ukLegend(banks, UBANK_COLORS)}</div>
           </div>
           <div class="uk-panel">
-            <div class="uk-hd"><div class="t">3 · Realisasi Recoveries KUR &amp; NON KUR</div><div class="s">Komposisi · Seasonal</div></div>
+            <div class="uk-hd"><div class="t">3 · Realisasi Recoveries KUR &amp; NON KUR</div><div class="s">Realisasi vs Target · Seasonal &amp; Full Year</div></div>
             <div class="uk-comp">
-              <div style="display:flex;flex-direction:column;min-height:0"><h4 style="color:var(--kur)">KUR per Bank</h4>${banks.length ? ukComp(banks, UBANK_COLORS) : '<div class="uk-rl">Tidak ada data KUR.</div>'}<div class="uk-foot">Total KUR <b>${ukTotal(banks)}</b></div></div>
-              <div style="display:flex;flex-direction:column;min-height:0"><h4 style="color:var(--nonkur)">NON KUR per Produk</h4>${prod.length ? ukComp(prod, UPROD_COLORS) : '<div class="uk-rl">Tidak ada data NON KUR.</div>'}<div class="uk-foot">Total NON KUR <b>${ukTotal(prod)}</b></div></div>
+              <div class="uk-ccol"><h4 style="color:var(--kur)">KUR per Bank</h4>${banks.length ? ukCompHd() + ukComp(banks, UBANK_COLORS, D.has_bank_target) : '<div class="uk-rl">Tidak ada data KUR.</div>'}${banks.length && !D.has_bank_target ? '<div class="uk-ct-note">Target per bank tampil begitu Fact_Target dipecah per bank (KUR_BRI, …).</div>' : ''}${ukFoot('KUR', banks, D.has_bank_target)}</div>
+              <div class="uk-ccol"><h4 style="color:var(--nonkur)">NON KUR per Produk</h4>${prod.length ? ukCompHd() + ukComp(prod, UPROD_COLORS, true) : '<div class="uk-rl">Tidak ada data NON KUR.</div>'}${ukFoot('NON KUR', prod, true)}</div>
             </div>
           </div>
           <div class="uk-panel">
@@ -5114,14 +5429,30 @@
     function setToken(t) { authTokMem = t || ''; try { t ? sessionStorage.setItem('subro_tok', t) : sessionStorage.removeItem('subro_tok'); } catch (e) { } }
     function getToken() { try { return sessionStorage.getItem('subro_tok') || authTokMem; } catch (e) { return authTokMem; } }
     // Panggil Apps Script: POST body string (Content-Type text/plain -> "simple request", tanpa preflight CORS)
-    async function asCall(payload) {
-      const res = await fetch(AUTH_CONFIG.appsScriptUrl, {
-        method: 'POST', redirect: 'follow',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      });
+    // timeoutMs: batas waktu tunggu; bila server tak merespons dalam waktu ini, dibatalkan agar UI tak "menggantung".
+    async function asCall(payload, timeoutMs) {
+      const tmo = timeoutMs || 90000; // default 90 dtk (login/data bawa seluruh isi sheet -> beri kelonggaran)
+      const ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+      let timer = null;
+      if (ctrl) timer = setTimeout(() => { try { ctrl.abort(); } catch (e) { } }, tmo);
+      let res;
+      try {
+        res = await fetch(AUTH_CONFIG.appsScriptUrl, {
+          method: 'POST', redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload),
+          signal: ctrl ? ctrl.signal : undefined
+        });
+      } catch (e) {
+        if (ctrl && ctrl.signal && ctrl.signal.aborted) {
+          throw new Error('Server terlalu lama merespons (> ' + Math.round(tmo / 1000) + ' dtk). Kemungkinan data di Sheet terlalu besar atau ada baris/kolom kosong yang memperlebar rentang. Coba lagi, dan periksa sheet Fact_Target (lihat langkah perbaikan).');
+        }
+        throw new Error('Tidak dapat menghubungi server. Periksa koneksi internet & URL Web App.');
+      } finally {
+        if (timer) clearTimeout(timer);
+      }
       const txt = await res.text();
-      let j; try { j = JSON.parse(txt); } catch (e) { throw new Error('Respons server tidak valid. Pastikan URL Web App benar.'); }
+      let j; try { j = JSON.parse(txt); } catch (e) { throw new Error('Respons server tidak valid. Pastikan URL Web App benar (jika Apps Script kehabisan waktu, biasanya balasannya berupa halaman HTML, bukan JSON).'); }
       return j;
     }
     async function doLogin(username, password) {
