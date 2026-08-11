@@ -5727,6 +5727,15 @@
       const fkbLY = fkbLYr ? cleanFact(fkbLYr) : null;
       const visits = visitR ? cleanVisit(visitR) : null;
       const nd = computeD(ft, fr, cab, undefined, frLY, fkb, fkbLY, visits);
+      // GUARD: tolak payload KOSONG / tidak lengkap (mis. auto-refresh yang gagal sebagian dari server).
+      // Tanpa ini, data nol/undefined akan menimpa data yang sedang tampil (semua jadi 0.0% & "undefined").
+      // Dengan melempar error di sini, pemanggil (gsRefresh) akan MEMPERTAHANKAN data terakhir yang valid.
+      const _lm = nd && nd.meta && nd.meta.latest_month_num;
+      if (!fr.length || !cab.length || !(_lm >= 1 && _lm <= 12)) {
+        const err = new Error('Data dari server kosong/tidak lengkap saat pembaruan');
+        err.empty = true;
+        throw err;
+      }
       const periods = Array.from({ length: nd.meta.max_month }, (_, i) => i + 1).map(m => ({
         key: 'm' + m, label: 'Data s.d. ' + MONTH_FULL[m - 1] + ' ' + nd.meta.year, month: m
       }));
@@ -5764,20 +5773,28 @@
       if (!D) return;
       if (!authOn() && !gsReady()) return;
       if (!playing) return; // jangan ganggu bila sedang dilihat/diinteraksi (hover mem-pause)
-      try {
-        const prevMonth = D.meta.latest_month_num, prevReal = D.ytd.gab.real;
-        const { nd, periods, raw } = await gsFetchCompute();
-        RAWROWS = raw; PERIODS = periods; D = nd;
-        if (authOn()) await fetchMon();
-        buildAll(); // 'cur' (slide aktif) dipertahankan; tidak go(0)
-        if (nd.meta.latest_month_num !== prevMonth || nd.ytd.gab.real !== prevReal) {
-          toast('Data diperbarui · s.d. ' + nd.meta.latest_month + ' ' + nd.meta.year, 'ok');
+      const prevMonth = D.meta.latest_month_num, prevReal = D.ytd.gab.real;
+      // Coba beberapa kali; D HANYA ditimpa bila data baru VALID (gsFetchCompute melempar error bila kosong),
+      // sehingga pembaruan yang gagal tidak pernah menghapus angka yang sedang tampil di layar.
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const { nd, periods, raw } = await gsFetchCompute();
+          RAWROWS = raw; PERIODS = periods; D = nd;   // commit hanya setelah lolos guard (data valid)
+          if (authOn()) await fetchMon();
+          buildAll(); // 'cur' (slide aktif) dipertahankan; tidak go(0)
+          if (nd.meta.latest_month_num !== prevMonth || nd.ytd.gab.real !== prevReal) {
+            toast('Data diperbarui · s.d. ' + nd.meta.latest_month + ' ' + nd.meta.year, 'ok');
+          }
+          return; // sukses
+        } catch (e) {
+          // sesi kadaluarsa -> minta login ulang, hentikan percobaan
+          if (authOn() && e && e.auth) { doLogout(); return; }
+          // kosong/transien -> tunggu sebentar lalu coba lagi; data lama tetap tampil
+          try { console.warn('Pembaruan data gagal (percobaan ' + attempt + '/3): ' + (e && e.message)); } catch (_) { }
+          if (attempt < 3) { await new Promise(r => setTimeout(r, 15000)); }
         }
-      } catch (e) {
-        // sesi kadaluarsa saat auto-refresh -> minta login ulang
-        if (authOn() && e && e.auth) { doLogout(); }
-        /* selain itu: biarkan; tetap tampilkan data terakhir yang berhasil */
       }
+      // ketiga percobaan gagal: sengaja TIDAK mengubah D — layar tetap menampilkan data terakhir yang valid.
     }
     let gsTimer = null;
     function gsStartAutoRefresh() {
